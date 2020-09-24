@@ -98,14 +98,14 @@ void create_cell_types( void )
 	cell_defaults.phenotype.motility.is_motile = true; 
 	cell_defaults.functions.update_migration_bias = oxygen_taxis_motility; 
 			
-	cell_defaults.phenotype.motility.persistence_time = parameters.doubles["perst_time_red"].value;
+	cell_defaults.phenotype.motility.persistence_time = parameters.doubles["pers_time_red"].value;
 	cell_defaults.phenotype.motility.migration_bias = parameters.doubles["bias_red"].value;
 	cell_defaults.phenotype.motility.migration_speed = parameters.doubles["speed_red"].value;
 	
 	// set default uptake and secretion 
 	// oxygen 
 	cell_defaults.phenotype.secretion.secretion_rates[oxygen_i] = 0.0; 
-	cell_defaults.phenotype.secretion.uptake_rates[oxygen_i] = parameters.doubles["uptake_rate"].value;
+	cell_defaults.phenotype.secretion.uptake_rates[oxygen_i] = parameters.doubles["cell_oxy_cons"].value;
 
 	// set the default cell type to no phenotype updates 
 	
@@ -113,17 +113,21 @@ void create_cell_types( void )
 	
 	cell_defaults.name = "cancer cell"; 
 	cell_defaults.type = 0; 
+    
+    //turn off BM forces
+    cell_defaults.phenotype.mechanics.cell_BM_adhesion_strength = 0.0;
+    cell_defaults.phenotype.mechanics.cell_BM_repulsion_strength = 0.0;
 	
 	// add custom data 
 	
 	std::vector<double> genes = { 1.0, 0.0 }; // RFP, GFP 
 	std::vector<double> proteins = {1.0, 0.0 }; // RFP, GFP; 
 	
-	double default_degradation_rate = parameters.doubles["degradation_rate"].value;
+	double default_degradation_rate = parameters.doubles["protein_deg_rate"].value;
 	
 	std::vector<double> degradation_rates = { default_degradation_rate , default_degradation_rate }; 
 	
-	double default_production_rate = parameters.doubles["production_rate"].value;
+	double default_production_rate = parameters.doubles["protein_prod_rate"].value;
 	
 	std::vector<double> creation_rates = { default_production_rate , default_production_rate }; 
 	
@@ -148,7 +152,7 @@ void setup_microenvironment( void )
 	
 	std::vector< double > position = {0.0,0.0,0.0};
 	for( unsigned int n=0; n < microenvironment.number_of_voxels() ; n++ ){
-		if (dist(microenvironment.mesh.voxels[n].center,position) >= parameters.doubles["tumor_radius"].value)
+		if (dist(microenvironment.mesh.voxels[n].center,position) >= parameters.doubles["initial_tumor_rad"].value)
 			microenvironment.add_dirichlet_node(n,default_microenvironment_options.Dirichlet_condition_vector);
 	}
 	
@@ -200,7 +204,7 @@ void setup_tissue( void )
 	double cell_radius = cell_defaults.phenotype.geometry.radius; 
 	double cell_spacing = 0.95 * 2.0 * cell_radius; 
 	
-	double tumor_radius = parameters.doubles["tumor_radius"].value; 
+	double tumor_radius = parameters.doubles["initial_tumor_rad"].value; 
 		
 	Cell* pCell = NULL; 
 	
@@ -334,19 +338,19 @@ void tumor_cell_phenotype( Cell* pCell, Phenotype& phenotype, double dt )
 	{
         phenotype.motility.is_motile = true; 
         phenotype.motility.migration_speed = parameters.doubles["speed_green"].value;
-        phenotype.motility.persistence_time = parameters.doubles["perst_time_green"].value;
+        phenotype.motility.persistence_time = parameters.doubles["pers_time_green"].value;
         // Fraction of green cells
         int countGreenCells = 0; int countGreenCellsM = 0;
         for(int i=0;i<all_cells->size();i++){ 
             if((*all_cells)[i]->custom_data.vector_variables[genes_i].value[green_i] == 1.0 && (*all_cells)[i]->phenotype.cycle.current_phase().code < 100){ 
                 countGreenCells++;
-                if(parameters.doubles["bias_greenResp"].value - (*all_cells)[i]->phenotype.motility.migration_bias < 0.001 ) countGreenCellsM++;
+                if(parameters.doubles["bias_green_rsp"].value - (*all_cells)[i]->phenotype.motility.migration_bias < 0.001 ) countGreenCellsM++;
             }
         }
         double fractionGreenCells = countGreenCellsM/(1.0*countGreenCells);
         // Choose of the bias
-        if(fractionGreenCells <= parameters.doubles["fracResponse_green"].value && parameters.doubles["fracResponse_green"].value != 0)
-            phenotype.motility.migration_bias = parameters.doubles["bias_greenResp"].value;
+        if(fractionGreenCells <= parameters.doubles["fraction_rsp"].value && parameters.doubles["fraction_rsp"].value != 0)
+            phenotype.motility.migration_bias = parameters.doubles["bias_green_rsp"].value;
         else{
             phenotype.motility.migration_bias = parameters.doubles["bias_green"].value;
         }
@@ -358,7 +362,7 @@ void tumor_cell_phenotype( Cell* pCell, Phenotype& phenotype, double dt )
 		{
 
 			  pCell->custom_data[persistence_time_i]+= dt;
-			  if (pCell->custom_data[persistence_time_i] > parameters.doubles["persitence_timeHip"].value)
+			  if (pCell->custom_data[persistence_time_i] > parameters.doubles["hypoxia_pers_time"].value)
 			  {
 				  phenotype.motility.is_motile = false;
 			  }

@@ -139,22 +139,24 @@
 	</microenvironment_setup>
 	
 	<user_parameters>
-	    <tumor_radius type="double" units="micron">250.0</tumor_radius>
-		<persitence_timeHip type="double" units="min">3000.0</persitence_timeHip>
-		<uptake_rate type="double" units="1/min">10.0</uptake_rate>
-		<rate_KnToKp type="double" units="1/min">0.00363</rate_KnToKp><!-- 0.00129 --> 
-		<rate_KpToKn type="double" units="1/min">0.00107</rate_KpToKn><!-- 0.00061 --> 
-		<sigmaS type="double" units="mmHg">38.0</sigmaS>
-		<sigmaT type="double" units="mmHg">6.0</sigmaT>
-		<speed_red type="double" units="micron/min">0.2938</speed_red> <!-- 0.2938 -->
-		<perst_time_red type="double" units="min">15.0</perst_time_red>
-		<bias_red type="double" units="dimensionless">0.1719</bias_red><!-- 0.1719 -->
-		<speed_green type="double" units="micron/min">0.4755</speed_green><!-- 0.4755 -->
-		<perst_time_green type="double" units="min">15.0</perst_time_green>
-		<bias_green type="double" units="dimensionless">0.1791</bias_green><!-- 0.1791 --> 
-        <fracResponse_green type="double" units="dimensionless">0.5</fracResponse_green> <!-- Not exact (more than one thread) -->
-        <bias_greenResp type="double" units="dimensionless">0.5</bias_greenResp>
-        <hypoxyprobe type="bool">false</hypoxyprobe>
-		<sigma_Hp type="double" units="mmHg">7.0</sigma_Hp>
+        <hypoxia_pers_time type="double" units="min" description="phenotype persistent time of GFP+ cells">3000.0</hypoxia_pers_time>
+		<fraction_rsp type="double" units="dimensionless" description="fraction of GFP+ cells with different migration bias (bias_green_rsp)">0.5</fraction_rsp>
+        <bias_green_rsp type="double" units="dimensionless" description="migration bias for GFP + cells (for fraction_rsp)">0.5</bias_green_rsp>
+        <hypoxyprobe type="bool" description="mark with hypoxyprobe">false</hypoxyprobe>
+		<speed_red type="double" units="micron/min" description="migration speed for DsRed+ cells">0.2938</speed_red>
+		<pers_time_red type="double" units="min" description="migration persistent time for DsRed+ cells">15.0</pers_time_red>
+		<bias_red type="double" units="dimensionless" description="migration bias for DsRed+ cells">0.1719</bias_red>
+		<speed_green type="double" units="micron/min" description="migration speed for GFP+ cells">0.4755</speed_green>
+		<pers_time_green type="double" units="min" description="migration persistent time for GFP+ cells">15.0</pers_time_green>
+		<bias_green type="double" units="dimensionless" description="migration bias for GFP+ cells">0.1791</bias_green>  
+        <initial_tumor_rad type="double" units="micron" description="initial tumor radius">250.0</initial_tumor_rad>
+        <cell_oxy_cons type="double" units="1/min" description="oxygen consumption rates by each cell">10.0</cell_oxy_cons>
+        <rate_KnToKp type="double" units="1/min" description="transition rate from Ki67- to Ki67+ (for saturated signal)">0.00363</rate_KnToKp>
+		<rate_KpToKn type="double" units="1/min" description="transition rate from Ki67+ to Ki67-">0.00107</rate_KpToKn>
+        <sigma_S type="double" units="mmHg" description="oxygen pressure threshold to signal proliferation saturation">38.0</sigma_S>
+		<sigma_T type="double" units="mmHg" description="min oxygen pressure to signal proliferation">6.0</sigma_T>
+        <sigma_H type="double" units="mmHg" description="oxygen pressure threshold to signal hypoxia">10.0</sigma_H>
+        <protein_prod_rate type="double" units="1/min" description="protein production rate">4.8e-4</protein_prod_rate>
+        <protein_deg_rate type="double" units="1/min" description="protein degradation rate">6.8e-5</protein_deg_rate>
 	</user_parameters>
 </PhysiCell_settings>
