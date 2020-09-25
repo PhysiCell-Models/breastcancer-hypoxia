@@ -107,7 +107,6 @@ void create_cell_types( void )
 	cell_defaults.phenotype.secretion.secretion_rates[oxygen_i] = 0.0; 
 	cell_defaults.phenotype.secretion.uptake_rates[oxygen_i] = parameters.doubles["cell_oxy_cons"].value;
 
-	// set the default cell type to no phenotype updates 
 	
 	cell_defaults.functions.update_phenotype = tumor_cell_phenotype; 
 	
@@ -118,8 +117,7 @@ void create_cell_types( void )
     cell_defaults.phenotype.mechanics.cell_BM_adhesion_strength = 0.0;
     cell_defaults.phenotype.mechanics.cell_BM_repulsion_strength = 0.0;
 	
-	// add custom data 
-	
+	// add custom data 	
 	std::vector<double> genes = { 1.0, 0.0 }; // RFP, GFP 
 	std::vector<double> proteins = {1.0, 0.0 }; // RFP, GFP; 
 	
@@ -200,7 +198,6 @@ void setup_tissue( void )
 	static int green_i = 1; 	
 	
 	// place a cluster of tumor cells at the center 
-	
 	double cell_radius = cell_defaults.phenotype.geometry.radius; 
 	double cell_spacing = 0.95 * 2.0 * cell_radius; 
 	
@@ -276,7 +273,8 @@ void tumor_cell_phenotype( Cell* pCell, Phenotype& phenotype, double dt )
 
 	static int persistence_time_i = pCell->custom_data.find_variable_index( "persistence time" );
 	static int necrosis_index = cell_defaults.phenotype.death.find_death_model_index( PhysiCell_constants::necrosis_death_model );
-	static int oxygen_i = get_default_microenvironment()->find_density_index( "oxygen" ); 
+	static int oxygen_i = get_default_microenvironment()->find_density_index( "oxygen" );
+    
 	
     //Update proliferation rate
 	double pO2 = (pCell->nearest_density_vector())[oxygen_i];
@@ -292,23 +290,21 @@ void tumor_cell_phenotype( Cell* pCell, Phenotype& phenotype, double dt )
 		}
 	}	
 	phenotype.cycle.data.transition_rate(0,1) = multiplier * cell_defaults.phenotype.cycle.data.transition_rate(0,1);
-	
-
-	
+		
 	// Deterministic necrosis 
 	if( pO2 < pCell->parameters.o2_necrosis_threshold )
 	{
 		phenotype.death.rates[necrosis_index] = 9e99;
 	}
-	
-	// if cell is dead, don't bother with future phenotype changes. 
+    
+    // if cell is dead, don't bother with future phenotype changes. 
 	if( phenotype.death.dead == true )
 	{
 		pCell->functions.update_phenotype = NULL; 		
 		return; 
 	}
 
-	// set genes 	
+	// set hypoxia threshold 	
 	static double FP_hypoxic_switch = parameters.doubles["sigma_H"].value;
 	
 	// permanent gene switch 
@@ -393,7 +389,6 @@ std::vector<std::string> AMIGOS_coloring_function( Cell* pCell )
 
 	static int cyto_color_i = 4;
 	static int nuclear_color_i = 5;
-
 	
 	// live cells are a combination of red and green 
 	if( pCell->phenotype.death.dead == false )

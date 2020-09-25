@@ -139,9 +139,9 @@
 	</microenvironment_setup>
 	
 	<user_parameters>	    
-		<hypoxia_pers_time type="double" units="min" description="phenotype persistent time of GFP+ cells">300</hypoxia_pers_time>
-		<fraction_rsp type="double" units="dimensionless" description="fraction of GFP+ cells with different migration bias (bias_greenResp)">0.5</fraction_rsp>
-        <bias_green_rsp type="double" units="dimensionless" description="migration bias for GFP + cells (for fraction_rsp)">1.0</bias_green_rsp>
+		<hypoxia_pers_time type="double" units="min" description="phenotype persistent time of GFP+ cells">3000</hypoxia_pers_time>
+		<fraction_rsp type="double" units="dimensionless" description="fraction of GFP+ cells with different migration bias (bias_green_rsp)">0.5</fraction_rsp>
+        <bias_green_rsp type="double" units="dimensionless" description="migration bias for GFP + cells (for fraction_rsp)">0.5</bias_green_rsp>
         <hypoxyprobe type="bool" description="mark with hypoxyprobe">false</hypoxyprobe>
 		<speed_red type="double" units="micron/min" description="migration speed for DsRed+ cells">0.2938</speed_red>
 		<pers_time_red type="double" units="min" description="migration persistent time for DsRed+ cells">15.0</pers_time_red>
