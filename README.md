@@ -1,10 +1,3 @@
-<<<<<<< Updated upstream
-# breastcancer-hypoxia
-
-test
-
-test2
-=======
 # Modeling of hypoxia in breast cancer
 This model demonstrates the evaluation of the new hypotheses on the frequency and duration of phenotypic changes in cancer cells under the influence of hypoxic conditions.
 
