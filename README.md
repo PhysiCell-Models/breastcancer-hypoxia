@@ -13,4 +13,3 @@ $ ./hypoxia
 ```
 
 The cloud-hosted interactive model can be run at https://nanohub.org/tools/pc4tumorhypoxia
->>>>>>> Stashed changes
